@@ -59,3 +59,5 @@ Herhangi bir sorunuz olursa GitHub Issues üzerinden soru sorabilir ya da PR aç
 ---
 
 **Başarılar!**
+
+Bu bir test değişikliğidir.
