@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:login_app/models/user_model.dart';
-import 'package:login_app/services/auth_service.dart';
 import 'package:login_app/screens/home_screen.dart';
 import 'package:login_app/screens/register_screen.dart';
+import 'package:login_app/services/auth_service.dart';
+import 'package:login_app/widgets/auth_page_layout.dart';
+import 'package:login_app/widgets/custom_auth_button.dart';
+import 'package:login_app/widgets/custom_textfield.dart';
 
 /// A screen that provides a user interface for user authentication.
-///
-/// This widget is stateful because it needs to manage the state of
-/// input fields and the loading status during an API call.
+/// It is built using reusable widgets for a clean and maintainable structure.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -16,54 +16,39 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Controllers to read the text input from the email and password fields.
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  // A boolean flag to manage the loading state of the login process.
-  // Used to show a progress indicator and disable the button during the API call.
   bool _isLoading = false;
-
-  // An instance of the AuthService to handle the login logic.
   final AuthService _authService = AuthService();
 
-  /// Handles the login process when the user taps the login button.
+  /// Handles the login process.
   Future<void> _login() async {
-    // Set the loading state to true to update the UI.
-    setState(() {
-      _isLoading = true;
-    });
-
+    setState(() { _isLoading = true; });
     try {
-      // Attempt to log in by calling the login method from AuthService.
       await _authService.login(
         _emailController.text,
         _passwordController.text,
       );
-
-      // If login is successful, navigate to the HomeScreen.
-      // pushReplacement is used to prevent the user from going back to the login screen.
+      // Use mounted check to avoid calling setState on unmounted widget
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     } catch (e) {
-      // If an error occurs during login, display an error message in a SnackBar.
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Giriş başarısız: ${e.toString()}'),
-          backgroundColor: Colors.red,
+          content: Text('Login failed: ${e.toString()}'),
+          backgroundColor: Colors.red.withOpacity(0.9),
         ),
       );
     } finally {
-      // Regardless of success or failure, set the loading state back to false.
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() { _isLoading = false; });
+      }
     }
   }
 
-  /// Cleans up the controllers when the widget is removed from the widget tree.
-  /// This is important for memory management.
   @override
   void dispose() {
     _emailController.dispose();
@@ -73,53 +58,84 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Giriş'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
+    // The entire page layout is managed by the AuthPageLayout widget.
+    return AuthPageLayout(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // --- Header Section ---
+          const Text(
+            'Welcome!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF3D3D3D),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Sign in to continue',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+              color: Color(0xFF5A5A5A),
+            ),
+          ),
+          const SizedBox(height: 40),
+
+          // --- Input Fields (using custom widgets) ---
+          CustomTextField(
+            controller: _emailController,
+            hintText: 'Email',
+            icon: Icons.email_outlined,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          const SizedBox(height: 20),
+          CustomTextField(
+            controller: _passwordController,
+            hintText: 'Password',
+            icon: Icons.lock_open_outlined,
+            obscureText: true,
+          ),
+          const SizedBox(height: 30),
+
+          // --- Login Button (using custom widget) ---
+          CustomAuthButton(
+            label: 'Sign In',
+            isLoading: _isLoading,
+            onPressed: _login,
+            backgroundColor: const Color(0xFF5f4b8b),
+            foregroundColor: Colors.white,
+          ),
+          const SizedBox(height: 20),
+
+          // --- Register Link ---
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Don't have an account?",
+                style: TextStyle(color: Color(0xFF5A5A5A)),
               ),
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(
-                labelText: 'Şifre',
-                border: OutlineInputBorder(),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                  );
+                },
+                child: const Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    color: Color(0xFF5f4b8b),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              // The button is disabled and shows a loading indicator if _isLoading is true.
-              onPressed: _isLoading ? null : _login,
-              child: _isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('Giriş'),
-            ),
-            TextButton(
-              onPressed: () {
-                // Navigate to the registration screen.
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const RegisterScreen()),
-                );
-              },
-              child: const Text('Hesabın yok mu? Kayıt ol'),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
