@@ -5,6 +5,7 @@ import 'package:login_app/services/auth_service.dart';
 import 'package:login_app/widgets/auth_page_layout.dart';
 import 'package:login_app/widgets/custom_auth_button.dart';
 import 'package:login_app/widgets/custom_textfield.dart';
+import 'package:login_app/screens/forgot_password_screen.dart';
 
 /// A screen that provides a user interface for user authentication.
 /// It is built using reusable widgets for a clean and maintainable structure.
@@ -100,6 +101,29 @@ class _LoginScreenState extends State<LoginScreen> {
             obscureText: true,
           ),
           const SizedBox(height: 30),
+          // --- Forget Password ---
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ForgotPasswordScreen(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Forgot your password?',
+                  style: TextStyle(
+                    color: Color(0xFF5A5A5A),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10), 
 
           // --- Login Button (using custom widget) ---
           CustomAuthButton(

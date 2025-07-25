@@ -1,63 +1,178 @@
-# Staj 2025 Ödev Repo Ana Sayfası
+# Login Sistemi Projesi - VB10 Staj 2025
 
-Bu repository, **VB10 Staj 2025** kapsamında stajyerlere ödevler vermek ve ödev teslim süreçlerini yönetmek amacıyla oluşturulmuştur.
+Bu proje, **VB10 Staj 2025** kapsamında geliştirilen, JWT tabanlı modern bir kimlik doğrulama (authentication) sistemidir. Proje; `.NET Core` ile geliştirilmiş bir **Backend API**, `React` ile geliştirilmiş bir **web arayüzü** ve `Flutter` ile geliştirilmiş bir **mobil uygulamadan** oluşmaktadır.
 
-## Amaç
+---
+## Proje Görev Tanımı
 
-- Stajyerlere çeşitli yazılım ve proje ödevleri sağlamak.
-- Teslim edilen ödevlerin takibini ve değerlendirmesini kolaylaştırmak.
-- Staj sürecinde öğrenmeyi ve gelişimi teşvik etmek.
+Bu projenin orijinal görev tanımı ve staj kaynakları aşağıdaki dosyalarda bulunmaktadır:
 
-## Mevcut Projeler
-
-### 📋 [Login Sistemi Projesi](./source/login_project.md)
-
-**Süre:** 1 hafta  
-**Takımlar:** Backend (.NET), Frontend (React/Angular), Mobil (Flutter)
-
-Modern bir web ve mobil uygulamanın temel taşı olan kimlik doğrulama (authentication) sistemini geliştirmeye odaklanan kapsamlı bir proje. Her takım kendi alanında JWT tabanlı güvenli login/register akışı oluşturacaktır.
-
-**Özellikler:**
-- 🔐 JWT tabanlı authentication API
-- 🌐 Modern ve responsive web arayüzü (Figma tasarımına uygun)
-- 📱 Cross-platform mobil uygulama
-
-### 🐾 [Pet Store Projesi](./source/pet_store_project.md)
-
-**Süre:** 1 hafta  
-**Takımlar:** Backend (Node.js/.NET), Frontend (React/Angular), Mobil (Flutter), AI (Python)
-
-Tam teşekküllü bir "Pet Store" uygulaması geliştiren, dört farklı teknoloji alanını kapsayan proje. [Swagger Petstore](https://petstore.swagger.io/) referans API'sini temel alır.
-
-**Özellikler:**
-- 🛍️ CRUD operasyonları ile Pet Store API
-- 🎨 Modern ve interaktif web uygulaması
-- 📱 iOS/Android uyumlu mobil uygulama
-- 🤖 AI destekli içerik üretimi ve kişiselleştirilmiş öneriler
-
-## Ödev Teslim Süreci
-
-Ödevinizi tamamladıktan sonra iki farklı yöntemle teslim edebilirsiniz:
-
-### 1. Fork ve Pull Request (PR) Yöntemi
-
-1. Bu repoyu kendi GitHub hesabınıza **fork** edin.
-2. Ödevinizi kendi fork'unuzda tamamlayın.
-3. Değişikliklerinizi ana repoya göndermek için bir **Pull Request (PR)** açın.
-
-### 2. Issue Açma Yöntemi
-
-1. Repoda yeni bir **issue** açın.
-2. Issue açıklamasında ödevinize ait kodu, linkleri veya dosyaları paylaşın.
-
-Her iki yöntemi de kullanabilirsiniz; seçim size aittir.
-
-## İletişim ve Destek
-
-Herhangi bir sorunuz olursa GitHub Issues üzerinden soru sorabilir ya da PR açıklamasında belirtebilirsiniz.
+- [Proje Detayları](source/Login_project.md)
+- [Teknik Kaynaklar](resources.md)
+- [Orijinal Depo Anasayfası](ASSIGNMENT.md)
 
 ---
 
-**Başarılar!**
+## Takım Üyeleri
 
-Bu bir test değişikliğidir.
+- **Backend**: Ozan Küçük
+- **Frontend (Web)**: Ege Öztürk ve Ali Buğra Tekin  
+- **Mobil (Flutter)**: Berkin Dönmez ve Bora Özdamar  
+
+---
+
+## Kullanılan Teknolojiler
+
+- .NET Core (Web API)
+- React (Frontend)
+- Flutter (Mobil)
+- Docker
+- JWT Authentication
+
+---
+
+## Özellikler (Features)
+
+- Kullanıcı Kaydı (Register)  
+- Kullanıcı Girişi (Login)  
+- JWT ile Güvenli Oturum Yönetimi  
+- Şifre Sıfırlama Akışı (Forgot/Reset Password)  
+- Responsive Web Arayüzü  
+- Cross-Platform Mobil Uygulama (Android & iOS)  
+
+---
+
+###  Ekran Görüntüleri
+
+#### Mobil Uygulama (Flutter)
+
+ <img src="./mobil/login_app/screenshots/login.png" width="200">  <img src="./mobil/login_app/screenshots/register.png" width="200">  <img src="./mobil/login_app/screenshots/password.png" width="200"> 
+
+#### Web Arayüzü (React)
+
+ <img src="./frontend/screenshots/login.png" width="470">  <img src="./frontend/screenshots/register.png" width="470">  <img src="./frontend/screenshots/password.jpeg" width="418"> 
+
+
+---
+
+## Kurulum ve Çalıştırma
+
+Projeyi yerel ortamınızda çalıştırmak için aşağıdaki adımları takip edin.
+
+### Ön Gereksinimler
+
+Aşağıdaki araçların bilgisayarınızda kurulu olduğundan emin olun:
+
+- **Docker Desktop**: Backend servisini çalıştırmak için  
+  [Docker Desktop İndirme Sayfası](https://www.docker.com/products/docker-desktop)
+
+- **Flutter SDK**: Mobil uygulamayı geliştirmek ve çalıştırmak için  
+  [Flutter SDK Kurulum Rehberi](https://docs.flutter.dev/get-started/install)
+
+- **Node.js**: Web arayüzünü çalıştırmak için  
+  [Node.js İndirme Sayfası](https://nodejs.org)
+
+---
+
+### Çalıştırma Adımları
+
+#### 1. Backend'i Başlatın (.NET)
+
+```bash
+# Projenin kök dizininden backend klasörüne gidin
+cd backend
+
+# Docker image'ını oluşturun
+docker build -t login-backend .
+
+# Docker konteynerini başlatın
+docker run -p 5000:8080 login-backend
+
+# Bu terminali açık bırakın. Backend artık http://localhost:5000 adresinde çalışıyor.
+```
+#### 2. Mobil Uygulamayı Başlatın (Flutter)
+
+```bash
+# Yeni bir terminal açın
+
+# Mobil uygulama klasörüne gidin
+cd mobil/login_app
+
+# Gerekli paketleri yükleyin
+flutter pub get
+
+# .env dosyasını oluşturun ve API adresini girin
+# (Detaylar için /mobil/README.md dosyasına bakın)
+
+# Uygulamayı çalıştırın
+flutter run
+```
+#### 3. Web Arayüzünü Başlatın (React)
+
+```bash
+# Yeni bir terminal açın
+
+# Web projesi klasörüne gidin
+cd frontend
+
+# Gerekli paketleri yükleyin
+npm install
+
+# Geliştirme sunucusunu başlatın
+npm run dev
+
+# Terminalde yazan localhost adresini (örn: http://localhost:5173) tarayıcıda açın.
+```
+
+---
+
+## Gelecek Geliştirmeler ve Tartışma (Future Work & Discussion)
+
+Bu proje, staj kapsamında modern bir kimlik doğrulama sisteminin tüm katmanlarıyla nasıl geliştirileceğini göstermek amacıyla tamamlanmıştır. Ancak projenin üretim ortamı standartlarına ulaşması için aşağıdaki geliştirmeler önerilmektedir:
+
+- **Güvenli Şifre Sıfırlama Akışı**  
+  Mevcut sistemde, şifre sıfırlama token'ı test amaçlı doğrudan kullanıcıya gösterilmektedir. Gerçek bir senaryoda, bu token güvenli bir SMTP e-posta servisi aracılığıyla kullanıcının kayıtlı adresine gönderilmelidir.
+
+- **JWT Oturumunun Kalıcılığı (Mobil)**  
+  Mobil uygulamada giriş yapıldıktan sonra alınan JWT token, `flutter_secure_storage` gibi güvenli bir alanda saklanarak uygulama yeniden açıldığında otomatik oturum devamlılığı sağlanabilir.
+
+- **İstemci Taraflı Doğrulama (Client-Side Validation)**  
+  Giriş/kayıt ekranlarında kullanıcıdan alınan verilerin (örneğin e-posta formatı veya boş alanlar) istemci tarafında kontrol edilmesi, hem kullanıcı deneyimini artırır hem de gereksiz API isteklerini azaltır.
+
+- **Google / Facebook ile Sosyal Giriş Desteği (OAuth 2.0)**  
+  Kullanıcıların e-posta ve şifre yerine Google veya Facebook hesaplarıyla kolayca giriş yapabilmesi için sosyal kimlik sağlayıcılarının entegre edilmesi planlanmaktadır. Bu sayede hem kullanıcı deneyimi artacak hem de kayıt işlemleri hızlanacaktır.
+
+---
+
+
+## İletişim
+
+Bu projeyi geliştiren ekibe aşağıdaki bağlantılardan ulaşabilirsiniz:
+
+### Berkin Dönmez 
+
+- GitHub: https://github.com/berkindonmezz
+- LinkedIn: https://www.linkedin.com/in/berkindonmez
+
+### Ozan Küçük
+
+- GitHub: https://github.com/haytlife
+- LinkedIn: https://www.linkedin.com/in/ozan-küçük-857b47280
+
+### Ali Buğra Tekin
+
+- GitHub: https://github.com/alibugratekin
+- LinkedIn: https://www.linkedin.com/in/ali-bugra-tekin
+
+### Ege Öztürk 
+
+- GitHub: https://github.com/EgeOzturk01
+- LinkedIn: https://www.linkedin.com/in/ege-%C3%B6zt%C3%BCrk-8aa244371/
+
+### Bora Özdamar
+
+- GitHub: https://github.com/ijustwatchedmrrobot
+- LinkedIn: https://www.linkedin.com/in/said-bora-ozdamar/
+
+
+
