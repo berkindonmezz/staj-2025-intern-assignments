@@ -23,12 +23,9 @@ Bu projenin orijinal görev tanımı ve staj kaynakları aşağıdaki dosyalarda
 
 ## Kullanılan Teknolojiler
 
-- .NET Core (Web API)
-- React (Frontend)
-- Flutter (Mobil)
-- Docker
-- JWT Authentication
-
+- **Backend:** ASP.NET Core Web API, Entity Framework Core, JWT, SQLite
+- **Frontend (Web):** React, Vite, TailwindCSS, React Router
+- **Mobil (Flutter):** Flutter SDK, Dart, Provider, http
 ---
 
 ## Özellikler (Features)
@@ -50,7 +47,7 @@ Bu projenin orijinal görev tanımı ve staj kaynakları aşağıdaki dosyalarda
 
 #### Web Arayüzü (React)
 
- <img src="./frontend/screenshots/login.png" width="470">  <img src="./frontend/screenshots/register.png" width="470">  <img src="./frontend/screenshots/password.jpeg" width="418"> 
+ <img src="./frontend/screenshots/login.png" width="470">  <img src="./frontend/screenshots/register.png" width="470">  <img src="./frontend/screenshots/password.jpeg" width="430"> 
 
 
 ---
@@ -63,8 +60,8 @@ Projeyi yerel ortamınızda çalıştırmak için aşağıdaki adımları takip 
 
 Aşağıdaki araçların bilgisayarınızda kurulu olduğundan emin olun:
 
-- **Docker Desktop**: Backend servisini çalıştırmak için  
-  [Docker Desktop İndirme Sayfası](https://www.docker.com/products/docker-desktop)
+- **.NET SDK:** Backend servisini çalıştırmak için gereklidir (Versiyon 8.0 veya üstü).
+  [.NET SDK İndirme Sayfası](https://dotnet.microsoft.com/download)
 
 - **Flutter SDK**: Mobil uygulamayı geliştirmek ve çalıştırmak için  
   [Flutter SDK Kurulum Rehberi](https://docs.flutter.dev/get-started/install)
@@ -76,20 +73,21 @@ Aşağıdaki araçların bilgisayarınızda kurulu olduğundan emin olun:
 
 ### Çalıştırma Adımları
 
+Uygulamaların birbiriyle konuşabilmesi için **önce Backend servisini başlatmanız** çok önemlidir.
+
 #### 1. Backend'i Başlatın (.NET)
 
 ```bash
-# Projenin kök dizininden backend klasörüne gidin
-cd backend
+# Projenin kök dizininden backend API klasörüne gidin
+cd login_backend/LoginProject.API
 
-# Docker image'ını oluşturun
-docker build -t login-backend .
+# Gerekli paketleri yükleyin
+dotnet restore
 
-# Docker konteynerini başlatın
-docker run -p 5000:8080 login-backend
-
-# Bu terminali açık bırakın. Backend artık http://localhost:5000 adresinde çalışıyor.
+# Uygulamayı çalıştırın
+dotnet run
 ```
+
 #### 2. Mobil Uygulamayı Başlatın (Flutter)
 
 ```bash
