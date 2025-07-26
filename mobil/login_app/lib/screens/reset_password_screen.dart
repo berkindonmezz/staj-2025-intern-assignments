@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/services/auth_service.dart'; 
 import 'package:login_app/widgets/auth_page_layout.dart';
 import 'package:login_app/widgets/custom_auth_button.dart';
 import 'package:login_app/widgets/custom_textfield.dart';
@@ -6,7 +7,6 @@ import 'package:login_app/widgets/custom_textfield.dart';
 /// A screen where users can set their new password using the reset token.
 class ResetPasswordScreen extends StatefulWidget {
   final String initialToken;
-
   const ResetPasswordScreen({super.key, required this.initialToken});
 
   @override
@@ -19,6 +19,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
+  final AuthService _authService = AuthService(); 
 
   @override
   void initState() {
@@ -28,12 +29,40 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   /// Handles the final password reset submission.
   Future<void> _resetPassword() async {
-    // TODO: Add AuthService call here to reset the password.
+    if (_newPasswordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match!'), backgroundColor: Colors.orange),
+      );
+      return;
+    }
+
     setState(() { _isLoading = true; });
-    await Future.delayed(const Duration(seconds: 2));
-    print('Password reset attempted.');
-    setState(() { _isLoading = false; });
-    // TODO: On success, navigate back to login screen with a success message.
+
+    try {
+      await _authService.resetPassword(
+        email: _emailController.text,
+        token: _tokenController.text,
+        password: _newPasswordController.text,
+        confirmPassword: _confirmPasswordController.text,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password has been reset successfully!'), backgroundColor: Colors.green),
+        );
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() { _isLoading = false; });
+      }
+    }
   }
 
   @override
@@ -52,7 +81,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // --- Header Section ---
           const Text(
             'Enter new password',
             textAlign: TextAlign.center,
@@ -63,8 +91,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             ),
           ),
           const SizedBox(height: 30),
-
-          // --- Input Fields ---
           CustomTextField(controller: _emailController, hintText: 'Email Address', icon: Icons.email_outlined, keyboardType: TextInputType.emailAddress),
           const SizedBox(height: 16),
           CustomTextField(controller: _tokenController, hintText: 'Reset Token', icon: Icons.vpn_key_outlined),
@@ -73,8 +99,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           const SizedBox(height: 16),
           CustomTextField(controller: _confirmPasswordController, hintText: 'Confirm New Password', icon: Icons.lock_outline, obscureText: true),
           const SizedBox(height: 30),
-
-          // --- Button ---
           CustomAuthButton(
             label: 'Reset Password',
             isLoading: _isLoading,

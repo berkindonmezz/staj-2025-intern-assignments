@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:login_app/screens/display_token_screen.dart';
+import 'package:login_app/services/auth_service.dart';
 import 'package:login_app/widgets/auth_page_layout.dart';
 import 'package:login_app/widgets/custom_auth_button.dart';
 import 'package:login_app/widgets/custom_textfield.dart';
+
 
 /// A screen where users can request a password reset token by providing their email.
 class ForgotPasswordScreen extends StatefulWidget {
@@ -15,24 +17,35 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _emailController = TextEditingController();
   bool _isLoading = false;
+  final AuthService _authService = AuthService();
 
   /// Handles the request to send a password reset token.
   Future<void> _sendResetToken() async {
     setState(() { _isLoading = true; });
 
-    // TODO: Add AuthService call here to request the token from the backend.
-    // For now, we simulate a network call and navigate to the next screen with a dummy token.
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (mounted) {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const DisplayTokenScreen(
-          resetToken: 'ed52dc83e94248a8', // This will come from the API
-        ),
-      ));
+    try {
+      // Call AuthService to get the real token from the API
+      final String token = await _authService.forgotPassword(_emailController.text);
+      
+      if (mounted) {
+        // On success, navigate to the next screen with the real token from the API
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => DisplayTokenScreen(
+            resetToken: token, 
+          ),
+        ));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() { _isLoading = false; });
+      }
     }
-
-    setState(() { _isLoading = false; });
   }
 
   @override
@@ -50,7 +63,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         children: [
           // --- Header Section ---
           const Text(
-            'Reset your password',
+            'Reset Password',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 32,
@@ -60,7 +73,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
           const SizedBox(height: 10),
           const Text(
-            'Enter your email address',
+            'Enter your email to receive a reset token',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -88,7 +101,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
           const SizedBox(height: 20),
 
-          // --- Back to Login Link ---
+          // --- DÜZELTİLMİŞ KISIM BURASI ---
+          // Bu buton artık doğru metni gösteriyor ve pop() ile bir önceki sayfaya dönüyor.
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();

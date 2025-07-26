@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_app/models/user_model.dart';
 import 'package:login_app/screens/home_screen.dart';
 import 'package:login_app/screens/register_screen.dart';
 import 'package:login_app/services/auth_service.dart';
@@ -26,14 +27,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     setState(() { _isLoading = true; });
     try {
-      await _authService.login(
+      // Call the login method and get the user object in return
+      final User user = await _authService.login(
         _emailController.text,
         _passwordController.text,
       );
       // Use mounted check to avoid calling setState on unmounted widget
       if (!mounted) return;
+      // Pass the user object to the HomeScreen
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen(user: user)),
       );
     } catch (e) {
       if (!mounted) return;
@@ -101,12 +104,13 @@ class _LoginScreenState extends State<LoginScreen> {
             obscureText: true,
           ),
           const SizedBox(height: 30),
-          // --- Forget Password ---
+          // --- Forgot Password Link ---
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
                 onPressed: () {
+                  // Navigate to the ForgotPasswordScreen
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const ForgotPasswordScreen(),
@@ -123,7 +127,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 10), 
 
           // --- Login Button (using custom widget) ---
           CustomAuthButton(

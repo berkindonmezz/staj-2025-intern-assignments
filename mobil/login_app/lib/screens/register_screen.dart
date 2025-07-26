@@ -14,13 +14,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  // Controllers updated according to the new registration requirements.
+  final _emailController = TextEditingController();
   final _usernameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _firstNameController = TextEditingController();
-  final _lastNameController = TextEditingController();
-  final _roleController = TextEditingController();
+  
   bool _isLoading = false;
   final AuthService _authService = AuthService();
 
@@ -37,14 +37,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     setState(() { _isLoading = true; });
     try {
+      // Call the updated register method in AuthService.
       await _authService.register(
+        email: _emailController.text,
         username: _usernameController.text,
+        phoneNumber: _phoneNumberController.text,
         password: _passwordController.text,
         confirmPassword: _confirmPasswordController.text,
-        email: _emailController.text,
-        firstName: _firstNameController.text,
-        lastName: _lastNameController.text,
-        role: _roleController.text,
       );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -71,19 +70,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
+    _emailController.dispose();
     _usernameController.dispose();
+    _phoneNumberController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _emailController.dispose();
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _roleController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // The entire page layout is managed by the AuthPageLayout widget.
     return AuthPageLayout(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           // --- Header Section ---
           const Text(
-            'Create Account',
+            'Create a new account',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 32,
@@ -99,34 +95,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
               color: Color(0xFF3D3D3D),
             ),
           ),
-          const SizedBox(height: 10),
-          const Text(
-            'Enter your details to start',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Color(0xFF5A5A5A),
-            ),
-          ),
           const SizedBox(height: 30),
 
-          // --- Input Fields (using custom widgets) ---
-          CustomTextField(controller: _firstNameController, hintText: 'First Name', icon: Icons.person_outline),
-          const SizedBox(height: 16),
-          CustomTextField(controller: _lastNameController, hintText: 'Last Name', icon: Icons.person_outline),
+          // --- Input Fields (Updated to match the new design) ---
+          CustomTextField(controller: _emailController, hintText: 'Email Address', icon: Icons.email_outlined, keyboardType: TextInputType.emailAddress),
           const SizedBox(height: 16),
           CustomTextField(controller: _usernameController, hintText: 'Username', icon: Icons.account_circle_outlined),
           const SizedBox(height: 16),
-          CustomTextField(controller: _emailController, hintText: 'Email', icon: Icons.email_outlined, keyboardType: TextInputType.emailAddress),
+          CustomTextField(controller: _phoneNumberController, hintText: 'Contact Number', icon: Icons.phone_outlined, keyboardType: TextInputType.phone),
           const SizedBox(height: 16),
           CustomTextField(controller: _passwordController, hintText: 'Password', icon: Icons.lock_open_outlined, obscureText: true),
           const SizedBox(height: 16),
           CustomTextField(controller: _confirmPasswordController, hintText: 'Confirm Password', icon: Icons.lock_outline, obscureText: true),
-          const SizedBox(height: 16),
-          CustomTextField(controller: _roleController, hintText: 'Role (e.g., User)', icon: Icons.verified_user_outlined),
           const SizedBox(height: 30),
 
-          // --- Register Button (using custom widget) ---
+          // --- Register Button ---
           CustomAuthButton(
             label: 'Sign Up',
             isLoading: _isLoading,
